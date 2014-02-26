@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 0f9e624b6c6ccab4ebe3fb93f68fa0da
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - compass: {fileID: 2800000, guid: 58875386989fd5a4e81aef5450f37164, type: 3}
+  - needle: {fileID: 2800000, guid: 4338ceeaa1f3c7b4baf0986f4dfe1bdf, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
