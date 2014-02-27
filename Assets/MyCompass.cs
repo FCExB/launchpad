@@ -33,11 +33,11 @@ public class MyCompass : MonoBehaviour {
 
 		angle -= transform.rotation.eulerAngles.y;
 
-		GUI.DrawTexture(new Rect(Screen.width-150,Screen.height - 150,100,100),compass);
+		//GUI.DrawTexture(new Rect(Screen.width-150,Screen.height - 150,100,100),compass);
 
 		Matrix4x4 matrixBackup = GUI.matrix;
-		GUIUtility.RotateAroundPivot(angle, new Vector2(Screen.width-100,Screen.height - 100));
-		GUI.DrawTexture(new Rect(Screen.width-150,Screen.height - 150,100,100),needle);
+		GUIUtility.RotateAroundPivot(angle, new Vector2(Screen.width-75,Screen.height - 75));
+		GUI.DrawTexture(new Rect(Screen.width-125,Screen.height - 125,100,100),needle);
 		GUI.matrix = matrixBackup;
 	}
 }
