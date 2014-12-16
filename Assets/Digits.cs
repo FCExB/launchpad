@@ -5,6 +5,7 @@ public class Digits : MonoBehaviour {
 
 	public LaunchpadManager launchpad;
 	public TextMesh infoText;
+	public TextMesh timerText;
 	public Effects effects;
 
 	public int numPlayers = 2;
@@ -21,6 +22,8 @@ public class Digits : MonoBehaviour {
 	float toggleTimer, gameOverTimer = 1000;
 	bool sideOn = false;
 
+	int buttonsHeld = 0;
+	float turnTimer;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +32,8 @@ public class Digits : MonoBehaviour {
 
 		targetX = (int)(Random.value * 7);
 		targetY = (int)(Random.value * 7);
+
+		timerText.text = "";
 
 		effects.Activate();
 	}
@@ -39,11 +44,17 @@ public class Digits : MonoBehaviour {
 			if (winner == 0) {
 				infoText.text = "";
 			} else {
-				infoText.text = "Player " + winner + " wins!";
+				infoText.text = "Player " + winner + " wins";
 			}
 
 		} else {
-			infoText.text = "Player " + nextPlayer + ":\nPress & Hold!";
+			string text = "Player " + nextPlayer;
+
+			if(buttonsHeld < 2) {
+				text += " - Hold";
+			}
+
+			infoText.text = text;
 		} 
 
 		while (buttons[targetX,targetY] != 0) {
@@ -72,13 +83,36 @@ public class Digits : MonoBehaviour {
 
 				gameOverTimer = 1000;
 				winner = 0;
+
+				buttonsHeld = 0;
 			} 
 
 			launchpad.ledOff(targetX, targetY);
 		} else {
 			launchpad.ledOnRed(targetX, targetY);
+
+			turnTimer -= Time.deltaTime;
+			
+			if (buttonsHeld > 3 && turnTimer < 0) {
+				gameOver = true;
+				gameOverTimer = 0;
+				winner = (nextPlayer % numPlayers) + 1;
+
+				turnTimer = -1;
+			}
+
+			if (buttonsHeld == 0 && turnTimer < 0) {
+				gameOver = true;
+				gameOverTimer = 15;
+			}
 		}
 
+		if (buttonsHeld > 3) {
+			timerText.text = ((int)turnTimer + 1).ToString();
+		} else {
+			timerText.text = "";
+		}
+		
 		for (int y = 0; y < 8; y++) {
 			if (sideOn) {
 				launchpad.ledOnYellow(8, y);
@@ -102,6 +136,10 @@ public class Digits : MonoBehaviour {
 		gameOver = false;
 
 		nextPlayer = 1;
+
+		turnTimer = 10;
+
+		buttonsHeld = 0;
 	}
 
 	private void onPress(int x, int y) {
@@ -118,6 +156,8 @@ public class Digits : MonoBehaviour {
 		if (x == targetX && y == targetY && !gameOver) {
 			buttons[x,y] = nextPlayer;
 			launchpad.ledOnYellow(x,y);
+			buttonsHeld++;
+			turnTimer = 10;
 			startNextTurn();
 		}
 	}

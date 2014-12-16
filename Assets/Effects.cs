@@ -40,7 +40,7 @@ public class Effects : MonoBehaviour {
 		newEffectCounter += Time.deltaTime;
 		updateCounter += Time.deltaTime;
 
-		if (newEffectCounter > 0.8) {
+		if (newEffectCounter > 0.7) {
 			effects.Add(new Effect(this, (int)(Random.value * 4) + 2, (int)(Random.value * 4) + 2, redNext));
 			newEffectCounter = 0;
 			redNext = !redNext;

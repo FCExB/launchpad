@@ -86,7 +86,7 @@ public class LaunchpadManager : MonoBehaviour {
 	
 	public void ledOnYellow(int x, int y) {
 		if(x<0 || x > 8 || y <0 || y > 7) {
-			Debug.Log(new System.ArgumentException("Button out of bounds"));
+			//Debug.Log(new System.ArgumentException("Button out of bounds"));
 			return;
 		}
 		try {
@@ -101,7 +101,7 @@ public class LaunchpadManager : MonoBehaviour {
 	
 	public void ledOnRed(int x, int y) {
 		if(x<0 || x > 8 || y <0 || y > 7) {
-			Debug.Log(new System.ArgumentException("Button out of bounds"));
+			//Debug.Log(new System.ArgumentException("Button out of bounds"));
 			return;
 		}
 
@@ -116,7 +116,7 @@ public class LaunchpadManager : MonoBehaviour {
 	
 	public void ledOff(int x, int y) {
 		if(x<0 || x > 8 || y <0 || y > 7) {
-			Debug.Log(new System.ArgumentException("Button out of bounds"));
+			//Debug.Log(new System.ArgumentException("Button out of bounds"));
 			return;
 		}
 
