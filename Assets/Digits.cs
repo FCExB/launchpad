@@ -5,6 +5,7 @@ public class Digits : MonoBehaviour {
 
 	public LaunchpadManager launchpad;
 	public TextMesh infoText;
+	public Effects effects;
 
 	public int numPlayers = 2;
 	
@@ -17,7 +18,7 @@ public class Digits : MonoBehaviour {
 		
 	private int[,] buttons = new int[8,8];
 
-	float toggleTimer = 0;
+	float toggleTimer, gameOverTimer = 1000;
 	bool sideOn = false;
 
 
@@ -28,19 +29,21 @@ public class Digits : MonoBehaviour {
 
 		targetX = (int)(Random.value * 7);
 		targetY = (int)(Random.value * 7);
+
+		effects.Activate();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (gameOver) {
 			if (winner == 0) {
-				infoText.text = "Press & Hold!";
+				infoText.text = "";
 			} else {
 				infoText.text = "Player " + winner + " wins!";
 			}
 
 		} else {
-			infoText.text = "Player " + nextPlayer + "'s turn!";
+			infoText.text = "Player " + nextPlayer + ":\nPress & Hold!";
 		} 
 
 		while (buttons[targetX,targetY] != 0) {
@@ -49,12 +52,27 @@ public class Digits : MonoBehaviour {
 		}
 		
 		if (gameOver) {
+			gameOverTimer += Time.deltaTime;
 			toggleTimer += Time.deltaTime;
 			
-			if (toggleTimer > 0.1) {
+			if (toggleTimer > 0.1 && gameOverTimer < 10) {
 				toggleTimer = 0;
 				sideOn = !sideOn;
 			}
+
+			if (gameOverTimer > 10 && gameOverTimer < 100) {
+				for (int x = 0; x < 8; x++) {
+					for (int y = 0; y < 8; y++) { 
+						launchpad.ledOff(x, y);
+					} 
+				}
+				effects.Activate();
+
+				sideOn = false;
+
+				gameOverTimer = 1000;
+				winner = 0;
+			} 
 
 			launchpad.ledOff(targetX, targetY);
 		} else {
@@ -71,10 +89,12 @@ public class Digits : MonoBehaviour {
 	}
 	
 	public void reset() {
+		effects.Deactivate();
+
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
-				launchpad.ledOff(x, y);
 				buttons[x,y] = 0;
+				launchpad.ledOff(x, y);
 			} 
 		}
 
@@ -84,10 +104,9 @@ public class Digits : MonoBehaviour {
 		nextPlayer = 1;
 	}
 
-	private void onPress(int x, int y){
-		Debug.Log(x + "," + y);
+	private void onPress(int x, int y) {
 
-		if (gameOver && (x == 8)) {
+		if (gameOver && ((x == 8) || gameOverTimer > 10)) {
 			reset();
 			return;
 		}
@@ -112,6 +131,8 @@ public class Digits : MonoBehaviour {
 			gameOver = true;
 			winner = (buttons[x,y] % numPlayers) + 1;
 			launchpad.ledOnRed(x, y);
+
+			gameOverTimer = 0;
 		}
 	}
 
