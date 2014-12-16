@@ -71,21 +71,27 @@ public class LaunchpadManager : MonoBehaviour {
 	public delegate void OnPressHandler(int x, int y);
 	
 	public event OnPressHandler OnPress;
+
+	public delegate void OnReleaseHandler(int x, int y);
+	
+	public event OnReleaseHandler OnRelease;
 	
 	private void MyNoteOn(NoteOnMessage msg) {
 		if(msg.Velocity > 0) {
-			OnPress((int)msg.Pitch/16,(int)msg.Pitch%16);
+			OnPress((int)msg.Pitch%16, 7 - (int)msg.Pitch/16);
+		} else {
+			OnRelease((int)msg.Pitch%16, 7 - (int)msg.Pitch/16);
 		}
 	}
 	
-	public void ledOn(int x, int y) {
-		if(x<0 || x > 7 || y <0 || y > 7) {
+	public void ledOnYellow(int x, int y) {
+		if(x<0 || x > 8 || y <0 || y > 7) {
 			Debug.Log(new System.ArgumentException("Button out of bounds"));
 			return;
 		}
 		try {
-	 		launchpadOutput.SendNoteOn(Channel.Channel1, (Pitch)(16*x + y) ,58);
-		} catch (DeviceException e) {
+			launchpadOutput.SendNoteOn(Channel.Channel1, (Pitch)(x + 16*(7-y)) ,58);
+		} catch (DeviceException ) {
 			ready = false;
 			launchpadOutput = null;
 			launchpadInput = null;
@@ -93,9 +99,14 @@ public class LaunchpadManager : MonoBehaviour {
 	}
 	
 	
-	public void setPlayerLocation(int x, int y) {
+	public void ledOnRed(int x, int y) {
+		if(x<0 || x > 8 || y <0 || y > 7) {
+			Debug.Log(new System.ArgumentException("Button out of bounds"));
+			return;
+		}
+
 		try {
-			launchpadOutput.SendNoteOn(Channel.Channel1, (Pitch)(16*x + y) ,15);
+			launchpadOutput.SendNoteOn(Channel.Channel1, (Pitch)(x + 16*(7-y)) ,15);
 		} catch (DeviceException e) {
 			ready = false;
 			launchpadOutput = null;
@@ -104,13 +115,13 @@ public class LaunchpadManager : MonoBehaviour {
 	}
 	
 	public void ledOff(int x, int y) {
-		if(x<0 || x > 8 || y <0 || y > 8) {
+		if(x<0 || x > 8 || y <0 || y > 7) {
 			Debug.Log(new System.ArgumentException("Button out of bounds"));
 			return;
 		}
 
 		try {
-	 		launchpadOutput.SendNoteOn(Channel.Channel1, (Pitch)(16*x + y) ,0);
+			launchpadOutput.SendNoteOn(Channel.Channel1, (Pitch)(x + 16*(7-y)) ,0);
 		} catch (DeviceException e) {
 			ready = false;
 			launchpadOutput = null;

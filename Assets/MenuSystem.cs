@@ -21,7 +21,7 @@ public class MenuSystem : MonoBehaviour {
 		GetComponent<AudioListener>().enabled = true;
 	}
 
-	private void SetMenuState(bool state) {
+	public void SetMenuState(bool state) {
 		onMenu = state;
 		camera.enabled = state; 
 		player.SetActive(!state);

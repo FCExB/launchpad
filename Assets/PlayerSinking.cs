@@ -34,6 +34,9 @@ public class PlayerSinking : MonoBehaviour {
 	}
 
 	public void reset() {
+		if(gameObject.activeSelf)
+			Physics.IgnoreCollision(collider,floor, true);
+		motor = GetComponent<CharacterMotor>();
 		motor.movement.maxFallSpeed = 10000;
 		motor.canControl = true;
 

@@ -6,11 +6,11 @@ public class MyCompass : MonoBehaviour {
 	public Texture compass;
 	public Texture needle;
 
-	public Vector3 target;
+	public TargetManager targetManager;
 
 	// Use this for initialization
 	void Start () {
-		target.y = 0;
+
 	}
 	
 	// Update is called once per frame
@@ -21,6 +21,9 @@ public class MyCompass : MonoBehaviour {
 	void OnGUI() {
 		Vector3 us = transform.position;
 		us.y = 0;
+
+		Vector3 target = targetManager.Target;
+		target.y = 0;
 
 		Vector3 direction = transform.position - target;
 

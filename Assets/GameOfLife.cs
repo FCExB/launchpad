@@ -43,7 +43,7 @@ public class GameOfLife : MonoBehaviour {
 		} else {
 			if(canGrow(cell)) {
 				toAdd.Add(cell);
-				launchpad.ledOn(x,y);
+				launchpad.ledOnYellow(x,y);
 				timeSinceRemoves = 0;
 			}
 		}
@@ -56,7 +56,7 @@ public class GameOfLife : MonoBehaviour {
 				launchpad.ledOff(c.x,c.y);
 			}
 			foreach(Cell c in solidCells) {
-				launchpad.ledOn(c.x,c.y);
+ 				launchpad.ledOnYellow(c.x,c.y);
 			}
 		}
 		
@@ -80,7 +80,7 @@ public class GameOfLife : MonoBehaviour {
 		exisitingCells.UnionWith(toAdd);
 		toAdd.Clear();
 
-		if(timeSinceRemoves > 1) {
+		if(timeSinceRemoves > 0.6) {
 
 			foreach (Cell center in exisitingCells) {
 				if(solidCells.Contains(center))
@@ -132,14 +132,14 @@ public class GameOfLife : MonoBehaviour {
 
 	public void setNewPlayerLocation(Cell oldCell, Cell newCell) {
 		
-		launchpad.setPlayerLocation(newCell.x,newCell.y);	
+		launchpad.ledOnRed(newCell.x,newCell.y);	
 		
 		if(oldCell == null) 
 			return;
 
 		if(launchpad.Ready) {
 			if(exisitingCells.Contains(oldCell) || solidCells.Contains(oldCell)) {
-				launchpad.ledOn(oldCell.x,oldCell.y);	
+				launchpad.ledOnYellow(oldCell.x,oldCell.y);	
 			} else {
 				launchpad.ledOff(oldCell.x,oldCell.y);
 			}
@@ -236,7 +236,7 @@ public class GameOfLife : MonoBehaviour {
 	public void addCell(Cell cell ) {
 		exisitingCells.Add(cell);
 		if(launchpad.Ready)
-			launchpad.ledOn(cell.x,cell.y);
+			launchpad.ledOnYellow(cell.x,cell.y);
 	}
 
 	public float cellWidth = 10;
@@ -249,24 +249,3 @@ public class GameOfLife : MonoBehaviour {
 		return new Cell(Mathf.RoundToInt((position.x/cellWidth)+3.5f), Mathf.RoundToInt((position.z/cellWidth)+3.5f));	
 	}
 }
-
-public class Cell {
-		public int x, y;
-		
-		public Cell(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-		
-		public override bool Equals(object obj) {
-			if (obj == null || GetType() != obj.GetType()) 
-        		return false;
-      
-      		Cell that = (Cell)obj;
-      		return x.Equals(that.x) && y.Equals(that.y);	
-		}
-		
-		public override int GetHashCode() {
-			return x*8+y;
-		}
-	}
